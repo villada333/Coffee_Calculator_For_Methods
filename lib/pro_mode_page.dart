@@ -4,12 +4,12 @@ import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
-import 'dart:ui'; // Para Opacity
+import 'dart:ui'; 
 
 import 'my_theme.dart';
 import 'app_state.dart';
 import 'custom_actions.dart' as actions;
-import 'home_page.dart'; // Para la navegación al HomePage
+import 'home_page.dart'; 
 
 class PROModePage extends StatefulWidget {
   const PROModePage({super.key});
@@ -22,13 +22,10 @@ class PROModePage extends StatefulWidget {
 
 class _PROModePageState extends State<PROModePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  double sliderMLValue = 130.0;    
+  double sliderTazasValue = 1.0;    
+  double sliderRatioValue = 10.0;  
 
-  // Estado local (antes en PROModeModel)
-  double sliderMLValue = 130.0;      // Default: 130ml por taza
-  double sliderTazasValue = 1.0;     // Default: 1 taza
-  double sliderRatioValue = 10.0;    // Default: Ratio 1:10
-
-  // Resultados de acciones
   int? resultMM;
   String? resultGramos;
   String? resultPreinfusion;
@@ -38,7 +35,7 @@ class _PROModePageState extends State<PROModePage> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       Provider.of<AppState>(context, listen: false)
-          .setDarkModeSetting(context, ThemeMode.light); // O el modo por defecto que prefieras
+          .setDarkModeSetting(context, ThemeMode.light); 
     });
   }
 
@@ -53,29 +50,16 @@ class _PROModePageState extends State<PROModePage> {
       sliderMLValue.toStringAsFixed(0),
     );
 
-    // Para replicar el comportamiento de FlutterFlow, usamos la función `calcularPreinfusion` existente.
-    // Ver la NOTA en custom_actions.dart sobre la posible inconsistencia de este cálculo
-    // si se desea que la preinfusión en Modo PRO dependa del `sliderMLValue`.
     final preinfusion = await actions.calcularPreinfusion(
       sliderTazasValue.toStringAsFixed(0),
       sliderRatioValue.toStringAsFixed(0),
     );
-    // Si decidiste usar una `calcularPreinfusionPro` que toma los gramos directamente:
-    // final preinfusion = await actions.calcularPreinfusionPro(gramos);
-    // O si `calcularPreinfusionPro` toma todos los sliders:
-    // final preinfusion = await actions.calcularPreinfusionPro(
-    //   sliderTazasValue.toStringAsFixed(0),
-    //   sliderRatioValue.toStringAsFixed(0),
-    //   sliderMLValue.toStringAsFixed(0),
-    // );
-
 
     setState(() {
       resultMM = mm;
       resultGramos = gramos;
       resultPreinfusion = preinfusion;
     });
-    // ignore: use_build_context_synchronously
     Provider.of<AppState>(context, listen: false).lookResult = true;
   }
 
@@ -96,7 +80,7 @@ class _PROModePageState extends State<PROModePage> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: theme.scaffoldBackgroundColor,
-        appBar: PreferredSize( // AppBar idéntico al de HomePage
+        appBar: PreferredSize( 
           preferredSize:
               Size.fromHeight(MediaQuery.sizeOf(context).height * 0.08),
           child: AppBar(
@@ -145,23 +129,19 @@ class _PROModePageState extends State<PROModePage> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Padding( // Botón Modo Asistido
+                    Padding( 
                       padding: EdgeInsetsDirectional.fromSTEB(5, 15, 5, 15),
                       child: Container(
                         width: MediaQuery.sizeOf(context).width,
                         height: MediaQuery.sizeOf(context).height * 0.05,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navega de vuelta a HomePage
                             Navigator.pushReplacementNamed(context, HomePage.routeName);
-                            // O usa Navigator.pop(context); si PROMode se abrió con pushNamed
                           },
                           child: Text('Modo Asistido'),
                         ),
                       ),
                     ),
-
-                    // Slider: Cantidad de Agua por Taza (ml)
                     _buildSectionContainer(
                       context,
                       theme: theme,
@@ -179,8 +159,6 @@ class _PROModePageState extends State<PROModePage> {
                       ],
                     ),
                     SizedBox(height: 15),
-
-                    // Slider: Número de Tazas
                     _buildSectionContainer(
                       context,
                       theme: theme,
@@ -198,8 +176,6 @@ class _PROModePageState extends State<PROModePage> {
                       ],
                     ),
                     SizedBox(height: 15),
-
-                    // Slider: Ratio Cafe Agua
                     _buildSectionContainer(
                       context,
                       theme: theme,
@@ -214,14 +190,12 @@ class _PROModePageState extends State<PROModePage> {
                         ),
                         Slider(
                           min: 8, max: 16, value: sliderRatioValue,
-                          label: sliderRatioValue.toStringAsFixed(0), divisions: 8, // (16-8) = 8
+                          label: sliderRatioValue.toStringAsFixed(0), divisions: 8, 
                           onChanged: (newValue) => setState(() => sliderRatioValue = newValue.roundToDouble()),
                         ),
                       ],
                     ),
                     SizedBox(height: 25),
-
-                    // Botón CALCULAR
                     Container(
                       width: MediaQuery.sizeOf(context).width,
                       height: MediaQuery.sizeOf(context).height * 0.07,
@@ -239,8 +213,6 @@ class _PROModePageState extends State<PROModePage> {
                       ),
                     ),
                     SizedBox(height: 20),
-
-                    // Sección de Resultados (idéntica a HomePage)
                     Visibility(
                       visible: appState.lookResult,
                       child: Container(
@@ -271,7 +243,6 @@ class _PROModePageState extends State<PROModePage> {
     );
   }
 
-  // --- Helper Widgets (Reutilizados/Adaptados de HomePage) ---
   Widget _buildSectionContainer(BuildContext context, {required ThemeData theme, required String title, required List<Widget> children}) {
     final Color ffAlternateColor = theme.brightness == Brightness.light
         ? MyTheme.lightAlternate
@@ -286,7 +257,7 @@ class _PROModePageState extends State<PROModePage> {
             title,
             style: theme.textTheme.bodyMedium!.copyWith(fontSize: 24, color: ffAlternateColor),
           ),
-          ...children, // El SizedBox entre el título y el contenido se añade dentro de `children` si es necesario
+          ...children, 
         ],
       ),
     );
@@ -296,7 +267,7 @@ class _PROModePageState extends State<PROModePage> {
     final Color ffAlternateColor = theme.brightness == Brightness.light
         ? MyTheme.lightAlternate
         : MyTheme.darkAlternate;
-    return Padding( // Añadido Padding para mejor espaciado en pantallas pequeñas
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -305,21 +276,21 @@ class _PROModePageState extends State<PROModePage> {
           Flexible(
             child: Text(
               label,
-              style: theme.textTheme.headlineMedium!.copyWith(fontSize: 22, color: ffAlternateColor), // Tamaño ajustado
+              style: theme.textTheme.headlineMedium!.copyWith(fontSize: 22, color: ffAlternateColor),
               overflow: TextOverflow.ellipsis,
             ),
           ),
           Flexible(
             child: Text(
               value,
-              style: theme.textTheme.headlineMedium!.copyWith(fontSize: 26, color: ffAlternateColor), // Tamaño ajustado
+              style: theme.textTheme.headlineMedium!.copyWith(fontSize: 26, color: ffAlternateColor), 
               overflow: TextOverflow.ellipsis,
             ),
           ),
           SizedBox(width: 4),
           Text(
             unit,
-            style: theme.textTheme.headlineMedium!.copyWith(fontSize: 22, color: ffAlternateColor), // Tamaño ajustado
+            style: theme.textTheme.headlineMedium!.copyWith(fontSize: 22, color: ffAlternateColor), 
           ),
         ],
       ),

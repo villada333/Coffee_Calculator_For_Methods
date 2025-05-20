@@ -16,7 +16,5 @@ class AppState extends ChangeNotifier {
   void setDarkModeSetting(BuildContext context, ThemeMode mode) {
     _themeMode = mode;
     notifyListeners();
-    // Si estás usando un paquete para cambiar el tema dinámicamente,
-    // también podrías necesitar interactuar con él aquí.
   }
 }

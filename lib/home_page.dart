@@ -5,24 +5,17 @@ import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
-import 'dart:ui'; // Para Opacity
+import 'dart:ui'; 
 
-import 'my_theme.dart'; // Tu tema personalizado
-import 'app_state.dart'; // Tu estado de aplicación
-import 'custom_actions.dart' as actions; // Tus acciones personalizadas
-
-// Si PROModeWidget está en otro archivo:
-// import 'pro_mode_page.dart'; // Asegúrate de tener esta página y su routeName
-// class PROModeWidget extends StatelessWidget {
-// static const String routeName = '/proMode';
-// // ... resto de tu widget PROModeWidget
-// }
+import 'my_theme.dart'; 
+import 'app_state.dart'; 
+import 'custom_actions.dart' as actions; 
 
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  static const String routeName = '/homePage'; // Para la navegación
+  static const String routeName = '/homePage'; 
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -31,12 +24,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Estado local
   String? dropDownMetodoValue;
-  double sliderTazasValue = 1.0; // Valor inicial
+  double sliderTazasValue = 1.0; 
   String? dropDownIntensidadValue;
 
-  // Resultados de acciones
   int? resultMM;
   String? resultGramos;
   String? resultPreinfusion;
@@ -46,7 +37,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       Provider.of<AppState>(context, listen: false)
-          .setDarkModeSetting(context, ThemeMode.light); // O el modo por defecto que prefieras
+          .setDarkModeSetting(context, ThemeMode.light); 
     });
   }
 
@@ -70,10 +61,8 @@ class _HomePageState extends State<HomePage> {
         resultGramos = gramos;
         resultPreinfusion = preinfusion;
       });
-      // ignore: use_build_context_synchronously
       Provider.of<AppState>(context, listen: false).lookResult = true;
     } else {
-      // ignore: use_build_context_synchronously
       final currentTheme = Theme.of(context);
       showDialog(
         context: context,
@@ -97,10 +86,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
-    final theme = Theme.of(context); // ThemeData actual (light o dark)
-    final textTheme = theme.textTheme; // TextTheme actual
-
-    // Determinar colores específicos de FlutterFlow si son necesarios y no están en ColorScheme
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     final Color ffAlternateColor = theme.brightness == Brightness.light
         ? MyTheme.lightAlternate
         : MyTheme.darkAlternate;
@@ -122,7 +109,6 @@ class _HomePageState extends State<HomePage> {
           preferredSize:
               Size.fromHeight(MediaQuery.sizeOf(context).height * 0.08),
           child: AppBar(
-            // backgroundColor ya viene del theme.appBarTheme.backgroundColor
             automaticallyImplyLeading: false,
             title: Align(
               alignment: AlignmentDirectional.center,
@@ -130,17 +116,14 @@ class _HomePageState extends State<HomePage> {
                 'Café y Barismo',
                 textAlign: TextAlign.center,
                 style: textTheme.headlineMedium!.copyWith(
-                  // El color del texto base para GradientText, el gradiente lo sobreescribe.
-                  // Usamos onPrimary ya que el fondo del AppBar es primary.
                   color: theme.colorScheme.onPrimary,
-                  fontSize: 40, // Según tu diseño original
+                  fontSize: 40,
                   letterSpacing: 1,
                   fontWeight: FontWeight.bold,
                 ),
                 colors: [
-                  // Colores del gradiente basados en tu tema de FlutterFlow
-                  theme.brightness == Brightness.light ? MyTheme.lightSecondaryBackground : MyTheme.darkSecondaryBackground, // primaryBackground
-                  theme.brightness == Brightness.light ? MyTheme.lightAccent2 : MyTheme.darkAccent2, // accent2
+                  theme.brightness == Brightness.light ? MyTheme.lightSecondaryBackground : MyTheme.darkSecondaryBackground,
+                  theme.brightness == Brightness.light ? MyTheme.lightAccent2 : MyTheme.darkAccent2,
                 ],
                 gradientType: GradientType.radial,
                 radius: 5,
@@ -153,41 +136,35 @@ class _HomePageState extends State<HomePage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(0),
                   child: Image.asset(
-                    'assets/images/BackGroundjpg.webp', // Asegúrate que esta imagen exista
+                    'assets/images/BackGroundjpg.webp',
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-            // centerTitle y elevation ya vienen de theme.appBarTheme
           ),
         ),
         body: SafeArea(
           top: true,
           child: Align(
-            alignment: AlignmentDirectional.topCenter, // Alineado arriba para SingleChildScrollView
+            alignment: AlignmentDirectional.topCenter,
             child: Padding(
               padding: EdgeInsets.all(5),
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min, // Para que el Column no ocupe toda la altura innecesariamente
-                  mainAxisAlignment: MainAxisAlignment.start, // Alinea los elementos al inicio
+                  mainAxisSize: MainAxisSize.min, 
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(5, 15, 5, 15), // Ajusta el padding si es necesario
+                      padding: EdgeInsetsDirectional.fromSTEB(5, 15, 5, 15),
                         child: Container(
                           width: MediaQuery.sizeOf(context).width,
                           height: MediaQuery.sizeOf(context).height * 0.05,
                           child: ElevatedButton(
                             onPressed: () {
-                              // --- ESTA ES LA LÍNEA CRUCIAL ---
                               Navigator.pushNamed(context, PROModePage.routeName);
-                              // ---------------------------------
                             },
-                            // El estilo del botón debería tomarse del elevatedButtonTheme en MyTheme
-                            // Si necesitas un estilo muy específico aquí, puedes usar .copyWith()
-                            // style: theme.elevatedButtonTheme.style?.copyWith(...),
-                            child: Text('Modo Pro'), // El estilo del texto también viene del theme
+                            child: Text('Modo Pro'), 
                           ),
                         ),
                       ),
@@ -204,17 +181,17 @@ class _HomePageState extends State<HomePage> {
                           color: ffSecondaryTextColor,
                           size: 24,
                         ),
-                        decoration: InputDecoration( // Usa el theme.inputDecorationTheme por defecto
+                        decoration: InputDecoration( 
                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         ),
-                        style: textTheme.labelLarge, // Estilo del texto del item seleccionado
+                        style: textTheme.labelLarge,
                         dropdownColor: theme.brightness == Brightness.light ? MyTheme.lightPrimaryBackground : MyTheme.darkPrimaryBackground,
                         items: [
                           'Aeropress', 'Chemex', 'V60', 'Prensa Francesa', 'Sifón'
                         ].map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value, style: textTheme.labelLarge), // Estilo de los items en la lista
+                            child: Text(value, style: textTheme.labelLarge), 
                           );
                         }).toList(),
                         onChanged: (val) =>
@@ -222,7 +199,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                      SizedBox(height: 15),
-
                     _buildSectionContainer(
                       context,
                       theme: theme,
@@ -232,11 +208,10 @@ class _HomePageState extends State<HomePage> {
                           sliderTazasValue.toStringAsFixed(0),
                           style: textTheme.bodyMedium!.copyWith(
                             fontSize: 22,
-                            color: ffAlternateColor, // Color específico
+                            color: ffAlternateColor, 
                           ),
                         ),
                         Slider(
-                          // activeColor, inactiveColor, thumbColor vienen de theme.sliderTheme
                           min: 1,
                           max: 12,
                           value: sliderTazasValue,
@@ -250,7 +225,6 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     SizedBox(height: 15),
-
                     _buildDropdownContainer(
                       context,
                       theme: theme,
@@ -284,7 +258,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(height: 25),
-
                     Container(
                       width: MediaQuery.sizeOf(context).width,
                       height: MediaQuery.sizeOf(context).height * 0.07,
@@ -293,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                         style: theme.elevatedButtonTheme.style?.copyWith(
                            textStyle: MaterialStateProperty.all(
                             textTheme.titleSmall!.copyWith(
-                              color: theme.colorScheme.onPrimary, // Asegura contraste
+                              color: theme.colorScheme.onPrimary,
                               fontSize: 28,
                             ),
                           ),
@@ -309,7 +282,7 @@ class _HomePageState extends State<HomePage> {
                         width: MediaQuery.sizeOf(context).width,
                         padding: EdgeInsets.symmetric(vertical: 20),
                         decoration: BoxDecoration(
-                          color: theme.scaffoldBackgroundColor, // O ffSecondaryBackgroundColor si es distinto
+                          color: theme.scaffoldBackgroundColor,
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -339,10 +312,9 @@ class _HomePageState extends State<HomePage> {
     final Color ffAlternateColor = theme.brightness == Brightness.light
         ? MyTheme.lightAlternate
         : MyTheme.darkAlternate;
-
     return Container(
       width: MediaQuery.sizeOf(context).width,
-      padding: EdgeInsets.symmetric(vertical: 8), // Reducido un poco
+      padding: EdgeInsets.symmetric(vertical: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -350,7 +322,7 @@ class _HomePageState extends State<HomePage> {
             title,
             style: theme.textTheme.bodyMedium!.copyWith(
               fontSize: 24,
-              color: ffAlternateColor, // Color específico de FlutterFlow
+              color: ffAlternateColor,
             ),
           ),
           SizedBox(height: 8),
@@ -369,7 +341,7 @@ class _HomePageState extends State<HomePage> {
         : MyTheme.darkAlternate;
     return Container(
       width: MediaQuery.sizeOf(context).width,
-      padding: EdgeInsets.symmetric(vertical: 8), // Reducido un poco
+      padding: EdgeInsets.symmetric(vertical: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -377,7 +349,7 @@ class _HomePageState extends State<HomePage> {
             title,
             style: theme.textTheme.bodyMedium!.copyWith(
               fontSize: 24,
-              color: ffAlternateColor, // Color específico de FlutterFlow
+              color: ffAlternateColor, 
             ),
           ),
           ...children,
@@ -385,17 +357,15 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _buildResultRow(BuildContext context, ThemeData theme, String label, String value, String unit) {
     final Color ffAlternateColor = theme.brightness == Brightness.light
         ? MyTheme.lightAlternate
         : MyTheme.darkAlternate;
-
     return Row(
-      mainAxisSize: MainAxisSize.min, // Para que no ocupe todo el ancho innecesariamente
+      mainAxisSize: MainAxisSize.min, 
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Flexible( // Para que el texto se ajuste si es muy largo
+        Flexible( 
           child: Text(
             label,
             style: theme.textTheme.headlineMedium!.copyWith(

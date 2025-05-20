@@ -28,10 +28,10 @@ class MyApp extends StatelessWidget {
       theme: MyTheme.lightThemeData,
       darkTheme: MyTheme.darkThemeData,
       themeMode: appState.themeMode,
-      initialRoute: HomePage.routeName, // O PROModePage.routeName si quieres que inicie ahí
+      initialRoute: HomePage.routeName,
       routes: {
         HomePage.routeName: (context) => const HomePage(),
-        PROModePage.routeName: (context) => const PROModePage(), // Ruta añadida
+        PROModePage.routeName: (context) => const PROModePage(),
       },
     );
   }
